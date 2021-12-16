@@ -5,6 +5,7 @@
 #include <vector>
 #include <complex>
 #include "vec2.h"
+#include "detector.h"
 
 class Radiator{
     private:
@@ -15,15 +16,18 @@ class Radiator{
         double wl_;
         int n_elem_;
         std::string filepathAcc_, filepathQ_;
+        Detector detector_;
     public:
         Radiator();
         Radiator(Vec2<double> &v, double wl,
                  const std::string &filepathAcc, 
-                 const std::string &filepathQ);
+                 const std::string &filepathQ,
+                 const Detector &detector);
         void set_pos(const Vec2<double> &v);
         void load_acc();
         void optical_path(Vec2<double> &detector);
-        std::vector<std::complex<double>> propagation();
+        void propagation();
+
 
 };
 

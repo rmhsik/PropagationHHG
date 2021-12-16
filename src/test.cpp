@@ -1,5 +1,6 @@
 #include "vec2.h"
 #include "radiator.h"
+#include "detector.h"
 #include "test.h"
 #include <iostream>
 #include <string>
@@ -53,9 +54,14 @@ void test_vec2(){
 
 
 void test_radiator(){
+    double L = 1e4;
+    double theta = 0.0;    
+    Vec2<double> d_pos(L*cos(theta),L*sin(theta));
+    // TODO: function to determine number of entries
+    Detector detector(3,d_pos,0);
     Vec2<double> pos(1.0,0.0);
     std::string pathAcc = "data/test.dat";
     std::string pathQ = "data/q.dat";
-    Radiator r1(pos,0.8,pathAcc,pathQ);
-
+    Radiator r1(pos,0.8,pathAcc,pathQ,detector);
+    r1.propagation(); 
 }
