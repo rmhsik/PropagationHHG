@@ -16,6 +16,8 @@ class Vec2{
         void y(const T yval);
         void set(const T x, const T y); 
         void zero();
+        T distance(Vec2 &v);
+        T angle(Vec2 &v);
         Vec2 operator+(const Vec2 &v);
         void operator+=(const Vec2 &v);
         Vec2 operator-(const Vec2 &v);

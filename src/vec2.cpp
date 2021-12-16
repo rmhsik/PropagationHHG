@@ -56,6 +56,18 @@ T Vec2<T>::norm(){
 }
 
 template <class T>
+T Vec2<T>::distance(Vec2 &v){
+    T d = sqrt(pow(x_ - v.x_,2) + pow(y_ - v.y_,2)); 
+    return d;
+} 
+
+template <class T>
+T Vec2<T>::angle(Vec2 &v){
+    T angle = acos((x_*v.x_ + y_*v.y_)/(norm()*v.norm()));
+    return angle;
+}
+
+template <class T>
 Vec2<T> Vec2<T>::operator+(const Vec2 &v){
     return Vec2(x_+v.x_, y_+v.y_);
 }
