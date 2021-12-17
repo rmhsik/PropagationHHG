@@ -1,4 +1,5 @@
 #include "detector.h"
+#include "utils.h"
 #include <complex>
 #include <string>
 #include <fstream>

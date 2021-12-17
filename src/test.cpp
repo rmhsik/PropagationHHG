@@ -60,9 +60,10 @@ void test_radiator(){
     int n_elem;
     Vec2<double> d_pos(L*cos(theta),L*sin(theta));
     Vec2<double> pos(1.0,0.0);
+   
     std::string pathAcc = "data/testAcc.dat";
     std::string pathQ = "data/testQ.dat";
-    n_elem = calc_n_elem(pathQ);
+    n_elem = calc_n_elem("none");
 
     Detector detector(n_elem,d_pos,0);
     Radiator r1(pos,0.8,pathAcc,pathQ,&detector,0);

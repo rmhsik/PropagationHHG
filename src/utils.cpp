@@ -12,6 +12,6 @@ int calc_n_elem(const std::string &path){
         }
         file.close();
     }
-    else{ std::cout<<"[calc_n_elem] Error opening file.\n";} 
+    else{ }//debug("[calc_n_elem] Error opening file.\n")} 
    return n_elem;
 } 

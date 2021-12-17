@@ -1,6 +1,7 @@
 #include <cmath>
 #include "radiator.h"
 #include "detector.h"
+#include "utils.h"
 #include <iostream>
 #include <fstream>
 
