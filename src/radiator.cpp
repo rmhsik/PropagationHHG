@@ -11,12 +11,14 @@ Radiator::Radiator(){
 Radiator::Radiator(Vec2<double> &v, double wl,
                    const std::string &filepathAcc,
                    const std::string &filepathQ,
-                   const Detector &detector){
+                   Detector *detector,
+                   const int idx){
     pos_ = v;
     wl_ = wl;
     filepathAcc_ = filepathAcc;
     filepathQ_ = filepathQ;
     detector_ = detector;
+    idx_ = idx;
     load_acc();
 }
 
@@ -69,11 +71,13 @@ void Radiator::optical_path(Vec2<double> &detector){
 }   
 
 void Radiator::propagation(){
-    Vec2<double> d_pos = detector_.get_pos();
+    Vec2<double> d_pos = detector_->get_pos();
     optical_path(d_pos);
     std::vector<std::complex<double>> propAcc(n_elem_);
     std::complex<double> I(0.0,1.0);
- 
+    std::cout<<"[Radiator] Optical path: ";
+    opt_path_.print();
+    std::cout<<std::endl; 
     // Temporal wavevector declaration 
     // until field class 
     Vec2<double> k(1.0,0.0);
@@ -85,7 +89,9 @@ void Radiator::propagation(){
         phi2 = std::complex<double>(1.0,0.0)*(k*pos_);
         // TODO: define wavector k
         acc_q *= exp(I*q*phi1)*exp(I*q*phi2);
+        std::cout<<"[Radiator] acc_q: "<<acc_q<<std::endl;
         propAcc[i] = acc_q;
     }
-    detector_.add_emission(propAcc);
+    std::cout<<"[Radiator] Propagation\n";
+    detector_->add_emission(propAcc);
 }
