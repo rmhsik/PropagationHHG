@@ -2,8 +2,10 @@
 #include "radiator.h"
 #include "detector.h"
 #include "utils.h"
+#include "debug.h"
 #include <iostream>
 #include <fstream>
+#include<stdlib.h>
 
 Radiator::Radiator(){
 
@@ -39,13 +41,11 @@ void Radiator::load_acc(){
             std::istringstream is(line); 
             is>>temp;
             accF_.push_back(temp);
-            //std::cout<<line<<std::endl;
-            //std::cout<<accF_[n_elem_-1]<<std::endl;
         }
-        std::cout<<"Number of elements: "<<n_elem_<<std::endl;
+        debug2("[Radiator->load_acc] n_elem_: "<<n_elem_);
         accFile.close();
     }
-    else{ std::cout<<"Error opening acceleration file.\n";} 
+    else{ debug0("[Radiator->load_acc] Error opening acceleration file.\n");exit(1);} 
     
     std::ifstream qFile;
     qFile.open(filepathQ_);
@@ -54,16 +54,15 @@ void Radiator::load_acc(){
         while(getline(qFile,line)){
             temp_n_elem++;
             q_.push_back(stod(line));
-            //std::cout<<line<<std::endl;
-            //std::cout<<q_[temp_n_elem-1]<<std::endl;
         }
-        std::cout<<"Number of elements: "<<temp_n_elem<<std::endl;
+        debug2("[Radiator->load_acc] temp_n_elem: "<<temp_n_elem);
         qFile.close();
         if (temp_n_elem != n_elem_){
-            std::cout<<"Acc file and orders file have different number of elements.\n";
+            debug0("[Radiator->load_acc] Acc file and orders file have different number of elements.\n");
+            exit(1);
         }
     }
-    else{ std::cout<<"Error opening orders file.\n";} 
+    else{ debug0("[Radiator->load_acc] Error opening orders file.\n");exit(1);} 
    
 }
 
@@ -76,9 +75,9 @@ void Radiator::propagation(){
     optical_path(d_pos);
     std::vector<std::complex<double>> propAcc(n_elem_);
     std::complex<double> I(0.0,1.0);
-    std::cout<<"[Radiator] Optical path: ";
-    opt_path_.print();
-    std::cout<<std::endl; 
+    //debug3("[Radiator->propagation] Optical path: ");
+    //opt_path_.print();
+    //debug3(std::endl); 
     // Temporal wavevector declaration 
     // until field class 
     Vec2<double> k(1.0,0.0);
@@ -90,9 +89,8 @@ void Radiator::propagation(){
         phi2 = std::complex<double>(1.0,0.0)*(k*pos_);
         // TODO: define wavector k
         acc_q *= exp(I*q*phi1)*exp(I*q*phi2);
-        std::cout<<"[Radiator] acc_q: "<<acc_q<<std::endl;
+        debug4("[Radiator->propagation] acc_q: "<<acc_q);
         propAcc[i] = acc_q;
     }
-    std::cout<<"[Radiator] Propagation\n";
     detector_->add_emission(propAcc);
 }
