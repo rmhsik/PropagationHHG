@@ -116,6 +116,20 @@ void Vec2<T>::operator/=(const T val){
     y_ /= val;
 }
 
+/*
+template <class T>
+std::ostream & operator<< (std::ostream &out, const Vec2<T> &v){
+    out<<v.x_<<" "<<v.y_<<std::endl;
+    return out;
+}
+
+template <class T>
+std::istream & operator>> (std::istream &in, Vec2<T> &v){
+    out>>v.x_>>" ">>v.y_>>std::endl;
+    return out;
+}
+*/
+
 template class Vec2<int>;
 template class Vec2<double>;
 template class Vec2<std::complex<double>>;

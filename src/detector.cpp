@@ -17,6 +17,10 @@ Detector::Detector(int n_elem, const Vec2<double> &pos, const int idx){
     debug2("[Detector] n_elem_: "<< n_elem_);
 }
 
+int Detector::get_n_elem(){
+    return n_elem_;
+}
+
 Vec2<double> Detector::get_pos(){
     return pos_;
 }

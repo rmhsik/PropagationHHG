@@ -14,6 +14,7 @@ class Detector{
         Detector();
         Detector(int n_elem, const Vec2<double> &pos, const int idx);
         Vec2<double> get_pos();
+        int get_n_elem();
         void add_emission(const std::vector<std::complex<double>> &accF);
         void write_to_file();
         void print_acc();

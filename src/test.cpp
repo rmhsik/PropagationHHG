@@ -1,14 +1,15 @@
 #include "vec2.h"
 #include "radiator.h"
 #include "detector.h"
+#include "target.h"
 #include "test.h"
 #include "utils.h"
 #include "debug.h"
 #include <iostream>
 #include <string>
 #include <vector>
-#include <random>
 #include <fstream>
+#include <random>
 
 void test_vec2(){
     Vec2<double> vecD1(1,3);
@@ -57,7 +58,7 @@ void test_vec2(){
     std::cout<<vecD1.angle(vecD2)<<std::endl;
 }
 
-
+/*
 void test_radiator(){
     #ifdef DEBUG
         std::cout<<"Debug enabled.\n";
@@ -110,10 +111,50 @@ void test_radiator(){
         }
     }
 
-    /*
+   
     Detector detector(n_elem,d_pos,0);
     Radiator r1(pos,0.8,pathAcc,pathQ,&detector,0);
     r1.propagation();
     detector.print_acc();
-    detector.write_to_file();*/
+    detector.write_to_file();
 }
+*/
+void test_target(){
+    int n_radiators, n_slabs, n_elem;
+    double xmax, ymax, wl, slab_width, L, theta;
+
+    n_radiators = 10000;
+    n_slabs= 20;
+    xmax = 100.0;
+    ymax = 100.0;
+    wl = 0.8;
+    slab_width=1e-3;
+    L = 1e4;
+    theta = 0.0;
+   
+    Vec2<double> d_pos(L*cos(theta),L*sin(theta)); 
+    n_elem = calc_n_elem("data/testQ.dat");
+  
+    std::string pathq = "data/testQ.dat";
+    std::string pathacc = "data/testAcc.dat";
+     
+    Detector detector(n_elem,d_pos,0);
+
+    debug2("[test_target] Initializing target...\n"); 
+    Target target(n_radiators, n_slabs, xmax, ymax, slab_width, wl,pathq,pathacc, &detector);
+    debug2("[test_target] Target finished.\n");
+
+    debug2("[test_target] Generating radiator positions...\n");
+    target.generate_pos();
+    debug2("[test_target] Finished calculating radiator positions,\n");
+    
+    debug2("[test_target] Generating radiators...\n");
+    target.generate_radiators();
+    debug2("[test_target] Finished generating radiators.\n");
+
+    debug2("[test_target] Propagating...\n");
+    target.propagate();
+    debug2("[test_target] Finished propagation.\n");
+
+}
+

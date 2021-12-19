@@ -2,6 +2,6 @@
 #define TEST_H
 void test_vec2();
 void test_radiator();
-
+void test_target();
 #endif
 
