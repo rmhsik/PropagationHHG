@@ -10,6 +10,7 @@
 #include <vector>
 #include <fstream>
 #include <random>
+#include <tuple>
 
 void test_vec2(){
     Vec2<double> vecD1(1,3);
@@ -120,9 +121,11 @@ void test_radiator(){
 }
 */
 void test_target(){
-    int n_radiators, n_slabs, n_elem;
-    double xmax, ymax, wl, slab_width, L, theta;
-
+    int n_radiators, n_slabs, n_elem, n_theta;
+    double xmax, ymax, wl, slab_width, L, dtheta;
+    std::vector<double> theta_vec;
+    
+    n_theta = 10;
     n_radiators = 10000;
     n_slabs= 20;
     xmax = 100.0;
@@ -130,31 +133,39 @@ void test_target(){
     wl = 0.8;
     slab_width=1e-3;
     L = 1e4;
-    theta = 0.0;
-   
-    Vec2<double> d_pos(L*cos(theta),L*sin(theta)); 
     n_elem = calc_n_elem("data/testQ.dat");
-  
     std::string pathq = "data/testQ.dat";
     std::string pathacc = "data/testAcc.dat";
-     
-    Detector detector(n_elem,d_pos,0);
 
-    debug2("[test_target] Initializing target...\n"); 
-    Target target(n_radiators, n_slabs, xmax, ymax, slab_width, wl,pathq,pathacc, &detector);
-    debug2("[test_target] Target finished.\n");
+    std::tie (theta_vec,dtheta) = linspace<double>(0,M_PI/2.0,n_theta);
 
-    debug2("[test_target] Generating radiator positions...\n");
-    target.generate_pos();
-    debug2("[test_target] Finished calculating radiator positions,\n");
     
-    debug2("[test_target] Generating radiators...\n");
-    target.generate_radiators();
-    debug2("[test_target] Finished generating radiators.\n");
+    for (int i=0; i<n_theta; i++){
+        debug2("[test_target] Main loop i: "<<i);
+        Vec2<double> d_pos(L*cos(theta_vec[i]),L*sin(theta_vec[i])); 
+             
+        Detector detector(n_elem,d_pos,i);
 
-    debug2("[test_target] Propagating...\n");
-    target.propagate();
-    debug2("[test_target] Finished propagation.\n");
+        debug2("[test_target] Initializing target..."); 
+        Target target(n_radiators, n_slabs, xmax, ymax, slab_width, wl,pathq,pathacc, &detector);
+        debug2("[test_target] Target finished.");
+
+        debug2("[test_target] Generating radiator positions...");
+        target.generate_pos();
+        debug2("[test_target] Finished calculating radiator positions.");
+        
+        debug2("[test_target] Generating radiators...");
+        target.generate_radiators();
+        debug2("[test_target] Finished generating radiators.");
+
+        debug2("[test_target] Propagating...");
+        target.propagate();
+        debug2("[test_target] Finished propagation.");
+    
+        debug2("[test_target] Saving to file...");
+        detector.write_to_file();
+        debug2("[test_target] Finished saving.\n");
+    }
 
 }
 

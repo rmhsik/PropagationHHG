@@ -83,19 +83,25 @@ void Radiator::propagation(){
     // Temporal wavevector declaration 
     // until field class 
     Vec2<double> k(1.0,0.0);
+    k *= 2.0*M_PI/wl_;
+    Vec2<double> x_vec(1.0,0.0);
+    double angle = opt_path_.angle(x_vec);
+    Vec2<double> k_hhg(cos(angle),sin(angle));
+    k_hhg *= 2.0*M_PI/wl_;
     debug3("[Radiator->propagation] Start loop...\n");
     for (int i=0; i<n_elem_; i++){
         debug3("[Radiator->propagation] Get acc...\n");
         std::complex<double> acc_q = accF_[i];
         debug3("[Radiator->propagation] Get q...\n");
         double q = q_vec_[i];
+        Vec2<double> kq = k_hhg*q;
         debug3("[Radiator->propagation] Declare phases\n");
         std::complex<double> phi1, phi2;
         debug3("[Radiator->propagation] Calc phases\n");
-        phi1 = std::complex<double>(1.0,0.0)*(k*opt_path_);
-        phi2 = std::complex<double>(1.0,0.0)*(k*pos_);
+        phi1 = std::complex<double>(1.0,0.0)*(kq*opt_path_);
+        phi2 = std::complex<double>(1.0,0.0)*(k*pos_)*q;
         // TODO: define wavector k
-        acc_q *= exp(I*q*phi1)*exp(I*q*phi2);
+        acc_q *= exp(I*phi1)*exp(I*phi2);
         debug4("[Radiator->propagation] acc_q: "<<acc_q);
         propAcc[i] = acc_q;
     }
