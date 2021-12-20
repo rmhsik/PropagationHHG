@@ -5,13 +5,14 @@
 #include "test.h"
 #include "utils.h"
 #include "debug.h"
+#include "param.h"
 #include <iostream>
 #include <string>
 #include <vector>
 #include <fstream>
 #include <random>
 #include <tuple>
-
+#include <omp.h>
 void test_vec2(){
     Vec2<double> vecD1(1,3);
     Vec2<double> vecD2(2,4);
@@ -120,10 +121,38 @@ void test_radiator(){
     detector.write_to_file();
 }
 */
+
+void benchmark(){
+    Parameters parameters;
+    //parameters.print();
+    double start,end;
+    start = omp_get_wtime();
+    Vec2<double> d_pos(parameters.L,0.0);
+    Detector detector(parameters,d_pos,0);
+    Target target(parameters,&detector);
+    target.generate_pos();
+    target.generate_radiators();
+    end = omp_get_wtime();
+    std::cout<<"Init exectime: "<< end-start<<" s."<<std::endl;
+
+    start = omp_get_wtime();
+    for (int i=0; i<5;i++){
+        Vec2<double> d_pos(parameters.L*cos(0.0),parameters.L*sin(0.0)); 
+        detector.update_pos(d_pos,i);
+        target.update_detector(&detector);     
+        target.propagate();
+    }
+    end = omp_get_wtime();
+
+    std::cout<<"One step exectime: "<<(end-start)/(double)5<<" s."<<std::endl;
+    std::cout<<"Full simulation: "<<(end-start)/(double)5*parameters.n_theta/(double)60<<" min."<<std::endl;
+}
+
 void test_target(){
-    int n_radiators, n_slabs, n_elem, n_theta;
+    Parameters parameters;
+    parameters.print();
+    /*int n_radiators, n_slabs, n_elem, n_theta;
     double xmax, ymax, wl, slab_width, L, dtheta;
-    std::vector<double> theta_vec;
     
     n_theta = 10;
     n_radiators = 10000;
@@ -137,37 +166,23 @@ void test_target(){
     std::string pathq = "data/testQ.dat";
     std::string pathacc = "data/testAcc.dat";
     std::string outpropfile = "results/prop_acc";
-    outpropfile = define_filepath(outpropfile);
-    std::cout<<outpropfile<<std::endl; 
-    std::tie (theta_vec,dtheta) = linspace<double>(0,M_PI/2.0,n_theta);
+    outpropfile = define_filepath(outpropfile);*/
+    double dtheta; 
+    std::vector<double> theta_vec;
+    std::tie (theta_vec,dtheta) = linspace<double>(0,2.0*M_PI,parameters.n_theta);
 
-    
-    for (int i=0; i<n_theta; i++){
-        debug2("[test_target] Main loop i: "<<i);
-        Vec2<double> d_pos(L*cos(theta_vec[i]),L*sin(theta_vec[i])); 
-             
-        Detector detector(n_elem,d_pos,outpropfile,i);
-
-        debug2("[test_target] Initializing target..."); 
-        Target target(n_radiators, n_slabs, xmax, ymax, slab_width, wl,pathq,pathacc, &detector);
-        debug2("[test_target] Target finished.");
-
-        debug2("[test_target] Generating radiator positions...");
-        target.generate_pos();
-        debug2("[test_target] Finished calculating radiator positions.");
-        
-        debug2("[test_target] Generating radiators...");
-        target.generate_radiators();
-        debug2("[test_target] Finished generating radiators.");
-
-        debug2("[test_target] Propagating...");
+    Vec2<double> d_pos(parameters.L*cos(theta_vec[0]),parameters.L*sin(theta_vec[0])); 
+    Detector detector(parameters,d_pos,0);
+    Target target(parameters, &detector);
+    target.generate_pos();
+    target.generate_radiators();
+    for (int i=0; i<parameters.n_theta; i++){
+        std::cout<<"\r[test_target] Main loop i: "<<i<<"\t";
+        Vec2<double> d_pos(parameters.L*cos(theta_vec[i]),parameters.L*sin(theta_vec[i])); 
+        detector.update_pos(d_pos,i);
+        target.update_detector(&detector);     
         target.propagate();
-        debug2("[test_target] Finished propagation.");
-    
-        //debug2("[test_target] Saving to file...");
-        //detector.write_to_file();
-        //debug2("[test_target] Finished saving.\n");
+        detector.write_to_file();
     }
-
 }
 

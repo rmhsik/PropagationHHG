@@ -7,22 +7,22 @@
 
 Target::Target(){}
 
-Target::Target(int n_radiators, int n_slabs, double xmax, double ymax, double slab_width, double wl, std::string &pathq, std::string &pathacc, Detector *detector){
-    n_radiators_ = n_radiators;
-    n_slabs_ = n_slabs;
-    xmax_ = xmax;
-    ymax_ = ymax;
-    slab_width_ = slab_width;
-    wl_ = wl;
-    pathq_ = pathq;
-    pathacc_ = pathacc;
+Target::Target(Parameters &param, Detector *detector){
+    n_radiators_ = param.n_radiators;
+    n_slabs_ = param.n_slabs;
+    xmax_ = param.xmax;
+    ymax_ = param.ymax;
+    slab_width_ = param.slab_width;
+    wl_ = param.wl;
+    pathq_ = param.pathQ;
+    pathacc_ = param.pathAcc;
     detector_ = detector;
    
     q_vec_= load_q();
     acc_vec_ = load_acc();
      
-    radiators_vec_.resize(n_radiators);
-    pos_vec_.resize(n_radiators);
+    radiators_vec_.resize(n_radiators_);
+    pos_vec_.resize(n_radiators_);
 }
 
 std::vector<double> Target::load_q(){
@@ -87,14 +87,18 @@ void Target::generate_radiators(){
     std::vector<double> q_vec = q_vec_;
 
     for(int i=0; i<n_radiators_;i++){
-        radiators_vec_[i] = Radiator (pos_vec_[i],0.8,accF,q_vec_, detector_, i); 
+        radiators_vec_[i] = Radiator (pos_vec_[i],wl_,accF,q_vec_, detector_, i); 
     }
     debug3("[Target->generate_radiators] Radiators generated.\n");
 }
 
+void Target::update_detector(Detector *detector){
+    detector_ = detector;
+}
+
 void Target::propagate(){
     for(int i=0; i<n_radiators_;i++){
-        radiators_vec_[i].propagation();
+        radiators_vec_[i].propagation(detector_);
     }
-    detector_->write_to_file();
+    //detector_->write_to_file();
 }

@@ -9,7 +9,8 @@
 int main(){
         //debug("[main] test_vec2.cpp\n");
     //test_vec2(); 
-    //test_radiator(); 
+    //test_radiator();
+    benchmark(); 
     test_target();
     return 0;
 }

@@ -4,6 +4,7 @@
 #include "radiator.h"
 #include "vec2.h"
 #include "radiator.h"
+#include "param.h"
 #include <string>
 
 class Target{
@@ -18,11 +19,12 @@ class Target{
         std::string pathq_, pathacc_;
     public:
         Target();
-        Target(int n_radiators, int n_slabs, double xmax, double ymax, double slab_width, double wl, std::string &pathq, std::string &pathacc, Detector *detector);
+        Target(Parameters &param, Detector *detector);
         std::vector<double> load_q();
         std::vector<std::complex<double>> load_acc();
         void generate_pos();
         void generate_radiators();
+        void update_detector(Detector *detector);
         void propagate();
 };
 

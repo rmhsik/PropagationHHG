@@ -9,12 +9,14 @@
 
 Detector::Detector(){}
 
-Detector::Detector(int n_elem, const Vec2<double> &pos, const std::string &filepath, const int idx){
+Detector::Detector(Parameters &param, const Vec2<double> &pos, const int idx){
     idx_ = idx;
-    n_elem_ = n_elem;
+    n_elem_ = param.n_elem;
     pos_ = pos;
+    counter_ = 0;
     accF_.resize(n_elem_);
-    filepath_ = filepath;
+    std::fill(accF_.begin(),accF_.end(),std::complex<double>(0.0,0.0));
+    filepath_ = param.outprop;
     debug2("[Detector] n_elem_: "<< n_elem_);
     debug2("[Detector] filepath: "<< filepath_);
 }
@@ -25,6 +27,13 @@ int Detector::get_n_elem(){
 
 Vec2<double> Detector::get_pos(){
     return pos_;
+}
+
+void Detector::update_pos(const Vec2<double> &pos, const int idx){
+    pos_ = pos;
+    idx_ = idx;
+    counter_=0;
+    std::fill(accF_.begin(),accF_.end(),std::complex<double>(0.0,0.0));
 }
 
 void Detector::add_emission(const std::vector<std::complex<double>> &accF){
@@ -48,7 +57,6 @@ void Detector::print_acc(){
 
 
 void Detector::write_to_file(){
-    debug2("[Detector->write_to_file] Path: "<<path);
     std::ofstream outfile;
     outfile.open(filepath_,std::ofstream::app);
 
@@ -56,7 +64,6 @@ void Detector::write_to_file(){
     debug3("[Detector->write_to_file]Outfile status: "<<outfile.is_open());
     if(outfile.is_open()){
         debug3("[Detector -> write_to_file] Writing to file...");
-        debug2("[Detector -> write_to_file] n_elem_: "<< n_elem_);
         outfile<<idx_<<" ";
         for(int i=0; i<n_elem_; i++){
             debug4("[Detector] accF_: "<<accF_[i]); 
