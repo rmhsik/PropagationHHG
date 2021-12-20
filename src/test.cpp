@@ -6,6 +6,7 @@
 #include "utils.h"
 #include "debug.h"
 #include "param.h"
+#include "interpolation.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -186,3 +187,8 @@ void test_target(){
     }
 }
 
+void test_interpolation(){
+    Parameters parameters;
+    Interpolation interp(parameters);
+
+}

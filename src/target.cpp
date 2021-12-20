@@ -68,17 +68,29 @@ void Target::generate_pos(){
     std::uniform_real_distribution<> dis(0.0,1.0);
     
     int k = 0;
-    for(int i=-n_slabs_/2; i<n_slabs_/2;i++){
+    if(n_slabs_>1){
+        for(int i=-n_slabs_/2; i<n_slabs_/2;i++){
+            for(int j=0; j<(int)(n_radiators_/n_slabs_);j++){
+                double x,y;
+                x = dis(gen)*xmax_; 
+                y = i*wl_/2.0-slab_width_/2.0 + dis(gen)*slab_width_;
+                debug4("[Target->generate_pos]"<<x<<" "<<y<<"\n");
+                pos_vec_[k] = Vec2<double>(x,y);
+                k++;
+            }    
+        }
+    }
+    else if(n_slabs_==1){
         for(int j=0; j<(int)(n_radiators_/n_slabs_);j++){
             double x,y;
             x = dis(gen)*xmax_; 
-            y = i*wl_/2.0-slab_width_/2.0 + dis(gen)*slab_width_;
+            y = -slab_width_/2.0 + dis(gen)*slab_width_;
             debug4("[Target->generate_pos]"<<x<<" "<<y<<"\n");
             pos_vec_[k] = Vec2<double>(x,y);
             k++;
-        }    
+        } 
     }
-    if(k != n_radiators_){debug1("[Target->generate_pos] k != n_radiators");}
+    if(k != n_radiators_){debug1("[Target->generate_pos] k != n_radiators. k: "<<k);}
     write_vector<Vec2<double>> (pos_vec_, pos_path); 
 }
 
