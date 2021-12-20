@@ -15,9 +15,8 @@ Interpolation::Interpolation(const Parameters &param){
     path_node_ = param.pathNode;
     path_q_ = param.pathQ;
 
-    int n_nodes_ = calc_n_elem(path_node_)-1;
-    int n_interpolations_ = calc_n_elem(path_q_);
-
+    n_nodes_ = calc_n_elem(path_node_)-1;
+    n_interpolations_ = calc_n_elem(path_q_);
     data_.resize(n_interpolations_,std::vector<std::vector<std::complex<double>>>(n_nodes_,std::vector<std::complex<double>>(4)));
 
     read_data();
@@ -78,5 +77,29 @@ void Interpolation::read_data(){
         }
     }
     else{debug0("[Interpolation->read_data] Unable to open interp_file");exit(1);}
-
 }
+
+std::vector<std::complex<double>> Interpolation::interp(double phi){
+    std::cout<<"n_interpolations_"<<n_interpolations_<<std::endl;
+    std::vector<std::complex<double>> acc_interp(n_interpolations_);
+    std::vector<double>::iterator it;
+    it = std::lower_bound(node_vec_.begin(),node_vec_.end(),phi);
+    int idx;
+    idx = it - node_vec_.begin();
+    std::cout<<idx<<std::endl;
+    std::cout<<"n_interpolations_"<<n_interpolations_<<std::endl;
+    for(int i=0;i<n_interpolations_;i++){
+        std::complex<double> val;
+        val = data_[i][idx][3] + 
+              data_[i][idx][2]*std::complex<double>((phi-node_vec_[idx]),0.0)+
+              data_[i][idx][1]*std::complex<double>(pow(phi-node_vec_[idx],2),0.0) + 
+              data_[i][idx][0]*std::complex<double>(pow(phi-node_vec_[idx],3),0.0);
+        acc_interp[i] = val;
+    }
+    std::string path = "results/interpacc.dat";
+    write_vector<std::complex<double>>(acc_interp,path);
+    std::cout<<node_vec_[idx]<<std::endl;
+    return acc_interp;
+}
+
+

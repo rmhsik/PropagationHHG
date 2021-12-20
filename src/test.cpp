@@ -190,5 +190,5 @@ void test_target(){
 void test_interpolation(){
     Parameters parameters;
     Interpolation interp(parameters);
-
+    interp.interp(0.0*M_PI);
 }

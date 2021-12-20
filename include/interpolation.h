@@ -20,7 +20,7 @@ class Interpolation{
         Interpolation();
         Interpolation(const Parameters &param);
         void read_data();
-
+        std::vector<std::complex<double>> interp(double phi);
 };
 
 #endif

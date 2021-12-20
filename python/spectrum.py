@@ -23,15 +23,15 @@ n_theta = 1
 theta = np.linspace(0,np.pi/2,n_theta)
 accF = np.zeros((n_theta,n_elem),dtype=np.complex128)
 
-for i,file in enumerate(glob.iglob(path_results+'prop_acc0.dat')):
+for i,file in enumerate(glob.iglob(path_results+'interpacc.dat')):
     accF[i] = LoadComplex(file)
-
+accF_2 = LoadComplex(path_data+'testAcc.dat')
 fig = plt.figure()
 ax = fig.subplots(1,1)
 
 for i, j in enumerate(accF):
     ax.plot(q,np.abs(j)**2,label=i)
-
+ax.plot(q,np.abs(accF_2)**2,label='2')
 ax.set_yscale('log')
 ax.legend(loc=0)
 plt.show()
