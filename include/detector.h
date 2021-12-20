@@ -10,9 +10,10 @@ class Detector{
         std::vector<std::complex<double>> accF_;
         Vec2<double> pos_;
         int n_elem_,idx_;
+        std::string filepath_;
     public:
         Detector();
-        Detector(int n_elem, const Vec2<double> &pos, const int idx);
+        Detector(int n_elem, const Vec2<double> &pos, const std::string &filepath, const int idx);
         Vec2<double> get_pos();
         int get_n_elem();
         void add_emission(const std::vector<std::complex<double>> &accF);

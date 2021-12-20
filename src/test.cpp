@@ -136,7 +136,9 @@ void test_target(){
     n_elem = calc_n_elem("data/testQ.dat");
     std::string pathq = "data/testQ.dat";
     std::string pathacc = "data/testAcc.dat";
-
+    std::string outpropfile = "results/prop_acc";
+    outpropfile = define_filepath(outpropfile);
+    std::cout<<outpropfile<<std::endl; 
     std::tie (theta_vec,dtheta) = linspace<double>(0,M_PI/2.0,n_theta);
 
     
@@ -144,7 +146,7 @@ void test_target(){
         debug2("[test_target] Main loop i: "<<i);
         Vec2<double> d_pos(L*cos(theta_vec[i]),L*sin(theta_vec[i])); 
              
-        Detector detector(n_elem,d_pos,i);
+        Detector detector(n_elem,d_pos,outpropfile,i);
 
         debug2("[test_target] Initializing target..."); 
         Target target(n_radiators, n_slabs, xmax, ymax, slab_width, wl,pathq,pathacc, &detector);
@@ -162,9 +164,9 @@ void test_target(){
         target.propagate();
         debug2("[test_target] Finished propagation.");
     
-        debug2("[test_target] Saving to file...");
-        detector.write_to_file();
-        debug2("[test_target] Finished saving.\n");
+        //debug2("[test_target] Saving to file...");
+        //detector.write_to_file();
+        //debug2("[test_target] Finished saving.\n");
     }
 
 }

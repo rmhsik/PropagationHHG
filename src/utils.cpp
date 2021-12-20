@@ -22,6 +22,24 @@ int calc_n_elem(const std::string &path){
    return n_elem;
 } 
 
+
+std::string define_filepath(std::string &base){
+    int i = 0; 
+    //std::string basepath = "results/prop_acc";
+    std::string ext = ".dat";
+    std::string path = base + std::to_string(i) + ext;
+    std::ifstream file; 
+    file.open(path);
+    while(file.is_open()){
+        i++;
+        file.close();
+        path = base + std::to_string(i) +ext;
+        file.open(path);
+    }
+    file.close();
+    return path;
+}
+
 template <class T>
 void write_vector(const std::vector<T> &vec, const std::string &path){
     std::ofstream outfile;

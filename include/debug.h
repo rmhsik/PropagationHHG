@@ -1,6 +1,6 @@
 #ifndef DEBUG_H
 #define DEBUG_H
-    #define DEBUG2
+    #define DEBUG1
     #if defined DEBUG4 
     #   define debug4(x) std::cout<<"[TRACE] "<<x<<std::endl;
     #   define debug3(x) std::cout<<"[DEBUG] "<<x<<std::endl;

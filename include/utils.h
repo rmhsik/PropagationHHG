@@ -10,6 +10,8 @@
 
 int calc_n_elem(const std::string &path);
 
+std::string define_filepath(std::string &base);
+
 template <class T>
 void write_vector(const std::vector<T> &vec, const std::string &path);
 

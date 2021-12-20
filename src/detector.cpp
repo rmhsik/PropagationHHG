@@ -9,12 +9,14 @@
 
 Detector::Detector(){}
 
-Detector::Detector(int n_elem, const Vec2<double> &pos, const int idx){
+Detector::Detector(int n_elem, const Vec2<double> &pos, const std::string &filepath, const int idx){
     idx_ = idx;
     n_elem_ = n_elem;
     pos_ = pos;
     accF_.resize(n_elem_);
+    filepath_ = filepath;
     debug2("[Detector] n_elem_: "<< n_elem_);
+    debug2("[Detector] filepath: "<< filepath_);
 }
 
 int Detector::get_n_elem(){
@@ -46,22 +48,21 @@ void Detector::print_acc(){
 
 
 void Detector::write_to_file(){
-    std::string basepath = "results/prop_acc";
-    std::string ext = ".dat";
-    std::string path = basepath + std::to_string(idx_) + ext;
     debug2("[Detector->write_to_file] Path: "<<path);
     std::ofstream outfile;
-    outfile.open(path);
+    outfile.open(filepath_,std::ofstream::app);
 
     debug3("[Detector->write_to_file] *accF: "<<&accF_);
     debug3("[Detector->write_to_file]Outfile status: "<<outfile.is_open());
     if(outfile.is_open()){
         debug3("[Detector -> write_to_file] Writing to file...");
         debug2("[Detector -> write_to_file] n_elem_: "<< n_elem_);
+        outfile<<idx_<<" ";
         for(int i=0; i<n_elem_; i++){
             debug4("[Detector] accF_: "<<accF_[i]); 
-            outfile<<accF_[i]<<std::endl;
+            outfile<<accF_[i]<<" ";
         }
+        outfile<<std::endl;
         outfile.close();
     }
     else{ debug1("[Detector->write_to_file] Error opening outfile.\n");}
