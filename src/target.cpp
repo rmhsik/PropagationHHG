@@ -113,7 +113,7 @@ void Target::update_detector(Detector *detector){
 }
 
 void Target::propagate(){
-    #pragma omp parallel for
+    #pragma omp parallel for schedule(dynamic)
     for(int i=0; i<n_radiators_;i++){
         radiators_vec_[i].propagation(detector_);
     }

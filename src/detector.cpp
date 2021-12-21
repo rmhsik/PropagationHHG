@@ -5,7 +5,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-
+#include <iomanip>
 
 Detector::Detector(){}
 
@@ -59,6 +59,7 @@ void Detector::print_acc(){
 void Detector::write_to_file(){
     std::ofstream outfile;
     outfile.open(filepath_,std::ofstream::app);
+    std::ostringstream doubleStr;
 
     debug3("[Detector->write_to_file] *accF: "<<&accF_);
     debug3("[Detector->write_to_file]Outfile status: "<<outfile.is_open());
@@ -66,8 +67,10 @@ void Detector::write_to_file(){
         debug3("[Detector -> write_to_file] Writing to file...");
         outfile<<idx_<<" ";
         for(int i=0; i<n_elem_; i++){
+            doubleStr<<std::fixed<<std::setprecision(12);
+            doubleStr<<accF_[i];
             debug4("[Detector] accF_: "<<accF_[i]); 
-            outfile<<accF_[i]<<" ";
+            outfile<<doubleStr.str()<<" ";
         }
         outfile<<std::endl;
         outfile.close();

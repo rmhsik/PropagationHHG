@@ -178,7 +178,7 @@ void test_target(){
     target.generate_pos();
     target.generate_radiators();
     for (int i=0; i<parameters.n_theta; i++){
-        std::cout<<"\r[test_target] Main loop i: "<<i<<"\t";
+        std::cout<<"\r[test_target] Main loop i: "<<i<<"         ";
         Vec2<double> d_pos(parameters.L*cos(theta_vec[i]),parameters.L*sin(theta_vec[i])); 
         detector.update_pos(d_pos,i);
         target.update_detector(&detector);     
@@ -190,5 +190,7 @@ void test_target(){
 void test_interpolation(){
     Parameters parameters;
     Interpolation interp(parameters);
-    interp.interp(0.0*M_PI);
+    std::vector<std::complex<double>> vec = interp.interp(0.5*M_PI);
+    std::string path = "results/test.dat";
+    write_vector(vec, path);
 }

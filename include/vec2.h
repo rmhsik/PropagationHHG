@@ -2,6 +2,7 @@
 #define VEC2_H
 
 #include<iostream>
+#include<iomanip>
 
 template <class T> 
 class Vec2{
@@ -32,6 +33,7 @@ class Vec2{
        
          
         friend std::ostream & operator<< (std::ostream &out,const Vec2<T> &v){
+            out<<std::fixed<<std::setprecision(12);
             out<<v.x_<<" "<<v.y_<<std::endl;
             return out;
         }
