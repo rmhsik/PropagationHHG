@@ -67,7 +67,7 @@ void Detector::write_to_file(){
         debug3("[Detector -> write_to_file] Writing to file...");
         outfile<<idx_<<" ";
         for(int i=0; i<n_elem_; i++){
-            doubleStr<<std::fixed<<std::setprecision(12);
+            doubleStr<<std::fixed<<std::setprecision(9);
             doubleStr<<accF_[i];
             debug4("[Detector] accF_: "<<accF_[i]); 
             outfile<<doubleStr.str()<<" ";

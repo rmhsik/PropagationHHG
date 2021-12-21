@@ -48,7 +48,7 @@ void write_vector(const std::vector<T> &vec, const std::string &path){
     outfile.open(path);
     if(outfile.is_open()){    
         for(T element: vec){
-            doubleStr<<std::fixed<<std::setprecision(12);
+            doubleStr<<std::fixed<<std::setprecision(6);
             doubleStr<<element;
             outfile<<doubleStr.str()<<std::endl;
         }
