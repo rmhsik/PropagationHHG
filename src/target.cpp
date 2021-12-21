@@ -4,6 +4,7 @@
 #include <random>
 #include <string>
 #include <fstream>
+#include <cmath>
 
 Target::Target(){}
 
@@ -17,7 +18,7 @@ Target::Target(Parameters &param, Detector *detector){
     pathq_ = param.pathQ;
     pathacc_ = param.pathAcc;
     detector_ = detector;
-   
+    interp_ = Interpolation(param); 
     q_vec_= load_q();
     acc_vec_ = load_acc();
      
@@ -99,7 +100,10 @@ void Target::generate_radiators(){
     std::vector<double> q_vec = q_vec_;
 
     for(int i=0; i<n_radiators_;i++){
-        radiators_vec_[i] = Radiator (pos_vec_[i],wl_,accF,q_vec_, detector_, i); 
+        double phi;
+        phi = 2.0*M_PI/wl_ * pos_vec_[i].x();
+        phi = fmod(phi,M_PI);
+        radiators_vec_[i] = Radiator (pos_vec_[i],wl_,interp_.interp(phi),q_vec_, detector_, i); 
     }
     debug3("[Target->generate_radiators] Radiators generated.\n");
 }
@@ -109,6 +113,7 @@ void Target::update_detector(Detector *detector){
 }
 
 void Target::propagate(){
+    #pragma omp parallel for
     for(int i=0; i<n_radiators_;i++){
         radiators_vec_[i].propagation(detector_);
     }

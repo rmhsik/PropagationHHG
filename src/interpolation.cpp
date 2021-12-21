@@ -6,6 +6,7 @@
 #include <vector>
 #include <complex>
 #include <stdlib.h>
+#include <omp.h>
 
 
 Interpolation::Interpolation(){}
@@ -80,25 +81,23 @@ void Interpolation::read_data(){
 }
 
 std::vector<std::complex<double>> Interpolation::interp(double phi){
-    std::cout<<"n_interpolations_"<<n_interpolations_<<std::endl;
     std::vector<std::complex<double>> acc_interp(n_interpolations_);
     std::vector<double>::iterator it;
     it = std::lower_bound(node_vec_.begin(),node_vec_.end(),phi);
     int idx;
-    idx = it - node_vec_.begin();
-    std::cout<<idx<<std::endl;
-    std::cout<<"n_interpolations_"<<n_interpolations_<<std::endl;
+    idx = it - node_vec_.begin() -1;
+    idx = idx >=n_nodes_-1 ? idx - 1 : idx;
+    std::complex<double> k1(phi-node_vec_[idx],0.0);
+    std::complex<double> k2(pow(phi-node_vec_[idx],2),0.0);
+    std::complex<double> k3(pow(phi-node_vec_[idx],3),0.0);
     for(int i=0;i<n_interpolations_;i++){
         std::complex<double> val;
         val = data_[i][idx][3] + 
-              data_[i][idx][2]*std::complex<double>((phi-node_vec_[idx]),0.0)+
-              data_[i][idx][1]*std::complex<double>(pow(phi-node_vec_[idx],2),0.0) + 
-              data_[i][idx][0]*std::complex<double>(pow(phi-node_vec_[idx],3),0.0);
+              data_[i][idx][2]*k1+
+              data_[i][idx][1]*k2 + 
+              data_[i][idx][0]*k3;
         acc_interp[i] = val;
     }
-    std::string path = "results/interpacc.dat";
-    write_vector<std::complex<double>>(acc_interp,path);
-    std::cout<<node_vec_[idx]<<std::endl;
     return acc_interp;
 }
 
