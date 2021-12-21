@@ -23,7 +23,7 @@ n_theta = 1
 theta = np.linspace(0,np.pi/2,n_theta)
 accF = np.zeros((n_theta,n_elem),dtype=np.complex128)
 
-for i,file in enumerate(glob.iglob(path_results+'interpacc.dat')):
+for i,file in enumerate(glob.iglob(path_results+'test.dat')):
     accF[i] = LoadComplex(file)
 accF_2 = LoadComplex(path_data+'testAcc.dat')
 fig = plt.figure()

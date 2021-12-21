@@ -69,12 +69,12 @@ void Interpolation::read_data(){
             getline(s,temp,' ');
             std::stringstream k_c3(temp);
             k_c3>>c3;
-            data_[q_counter][node_counter%39][0] = c0;
-            data_[q_counter][node_counter%39][1] = c1;
-            data_[q_counter][node_counter%39][2] = c2;
-            data_[q_counter][node_counter%39][3] = c3;
+            data_[q_counter][node_counter%40][0] = c0;
+            data_[q_counter][node_counter%40][1] = c1;
+            data_[q_counter][node_counter%40][2] = c2;
+            data_[q_counter][node_counter%40][3] = c3;
             node_counter++;
-            q_counter = node_counter%39==0 ? q_counter += 1 : q_counter; 
+            q_counter = node_counter%40==0 ? q_counter += 1 : q_counter; 
         }
     }
     else{debug0("[Interpolation->read_data] Unable to open interp_file");exit(1);}

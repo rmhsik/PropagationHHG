@@ -190,7 +190,8 @@ void test_target(){
 void test_interpolation(){
     Parameters parameters;
     Interpolation interp(parameters);
-    std::vector<std::complex<double>> vec = interp.interp(0.5*M_PI);
+    double phi = 0.99*M_PI;
+    std::vector<std::complex<double>> vec = interp.interp(fmod(phi,M_PI));
     std::string path = "results/test.dat";
     write_vector(vec, path);
 }
