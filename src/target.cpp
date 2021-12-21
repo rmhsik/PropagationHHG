@@ -91,6 +91,8 @@ void Target::generate_pos(){
             k++;
         } 
     }
+    std::cout<<"k: "<<k<<std::endl;
+    std::cout<<"Radiator pos size: "<<pos_vec_.size()<<std::endl;
     if(k != n_radiators_){debug1("[Target->generate_pos] k != n_radiators. k: "<<k);}
     write_vector<Vec2<double>> (pos_vec_, pos_path); 
 }

@@ -44,11 +44,11 @@ std::string define_filepath(std::string &base){
 template <class T>
 void write_vector(const std::vector<T> &vec, const std::string &path){
     std::ofstream outfile;
-    std::ostringstream doubleStr;
     outfile.open(path);
     if(outfile.is_open()){    
         for(T element: vec){
-            doubleStr<<std::fixed<<std::setprecision(6);
+            std::ostringstream doubleStr;
+            doubleStr<<std::fixed<<std::setprecision(12);
             doubleStr<<element;
             outfile<<doubleStr.str()<<std::endl;
         }
