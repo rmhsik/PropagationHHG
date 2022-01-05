@@ -15,6 +15,7 @@ Target::Target(Parameters &param, Detector *detector){
     ymax_ = param.ymax;
     slab_width_ = param.slab_width;
     wl_ = param.wl;
+    inc_theta_ = param.inc_theta;
     pathq_ = param.pathQ;
     pathacc_ = param.pathAcc;
     detector_ = detector;
@@ -74,7 +75,7 @@ void Target::generate_pos(){
             for(int j=0; j<(int)(n_radiators_/n_slabs_);j++){
                 double x,y;
                 x = dis(gen)*xmax_; 
-                y = i*wl_/2.0-slab_width_/2.0 + dis(gen)*slab_width_;
+                y = i*wl_/2.0;//-slab_width_/2.0 + dis(gen)*slab_width_;
                 debug4("[Target->generate_pos]"<<x<<" "<<y<<"\n");
                 pos_vec_[k] = Vec2<double>(x,y);
                 k++;
@@ -103,9 +104,9 @@ void Target::generate_radiators(){
 
     for(int i=0; i<n_radiators_;i++){
         double phi;
-        phi = 2.0*M_PI/wl_ * pos_vec_[i].x();
-        phi = fmod(phi,M_PI);
-        radiators_vec_[i] = Radiator (pos_vec_[i],wl_,interp_.interp(phi),q_vec_, detector_, i); 
+        phi = 2.0*M_PI/wl_ * (pos_vec_[i].x()*cos(inc_theta_) + pos_vec_[i].y()*sin(inc_theta_) );
+        phi = fabs(fmod(phi,M_PI));
+        radiators_vec_[i] = Radiator (pos_vec_[i],wl_, inc_theta_,interp_.interp(phi),q_vec_, detector_, i); 
     }
     debug3("[Target->generate_radiators] Radiators generated.\n");
 }

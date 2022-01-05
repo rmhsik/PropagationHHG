@@ -12,6 +12,7 @@ class Target{
     private: 
         int n_radiators_, n_slabs_, n_elem_;
         double xmax_, ymax_, slab_width_, wl_;
+        double inc_theta_;
         Detector *detector_;
         Interpolation interp_;
         std::vector<Radiator> radiators_vec_;

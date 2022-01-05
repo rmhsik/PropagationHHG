@@ -16,12 +16,14 @@ class Radiator{
         std::vector<double> q_vec_;
         double wl_;
         int n_elem_,idx_;
+        double inc_theta_;
         //std::string filepathAcc_, filepathQ_;
         Detector *detector_;
     public:
         Radiator();
         Radiator(Vec2<double> &v,
                  double wl,
+                 double inc_theta,
                  const std::vector<std::complex<double>> &accF_vec,
                  const std::vector<double> &q_vec,
                  Detector *detector,

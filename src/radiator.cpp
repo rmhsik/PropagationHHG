@@ -13,12 +13,14 @@ Radiator::Radiator(){
 
 Radiator::Radiator(Vec2<double> &v,
                    double wl,
+                   double inc_theta,
                    const std::vector<std::complex<double>> &accF_vec,
                    const std::vector<double> &q_vec,
                    Detector *detector,
                    const int idx){
     pos_ = v;
     wl_ = wl;
+    inc_theta_ = inc_theta;
     q_vec_ = q_vec;
     accF_ = accF_vec;
     detector_ = detector;
@@ -40,7 +42,7 @@ void Radiator::propagation(Detector* detector){
     debug3("[Radiator->propagation] n_elem_ : "<<n_elem_ );
     std::vector<std::complex<double>> propAcc(n_elem_);
     std::complex<double> I(0.0,1.0);
-    Vec2<double> k(1.0,0.0);
+    Vec2<double> k(cos(inc_theta_),sin(inc_theta_));
     k *= 2.0*M_PI/wl_;
     Vec2<double> x_vec(1.0,0.0);
     double angle = opt_path_.angle(x_vec);
