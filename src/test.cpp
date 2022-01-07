@@ -152,22 +152,6 @@ void benchmark(){
 void test_target(){
     Parameters parameters;
     parameters.print();
-    /*int n_radiators, n_slabs, n_elem, n_theta;
-    double xmax, ymax, wl, slab_width, L, dtheta;
-    
-    n_theta = 10;
-    n_radiators = 10000;
-    n_slabs= 20;
-    xmax = 100.0;
-    ymax = 100.0;
-    wl = 0.8;
-    slab_width=1e-3;
-    L = 1e4;
-    n_elem = calc_n_elem("data/testQ.dat");
-    std::string pathq = "data/testQ.dat";
-    std::string pathacc = "data/testAcc.dat";
-    std::string outpropfile = "results/prop_acc";
-    outpropfile = define_filepath(outpropfile);*/
     double dtheta; 
     std::vector<double> theta_vec;
     std::tie (theta_vec,dtheta) = linspace<double>(0,2.0*M_PI,parameters.n_theta);
@@ -175,14 +159,16 @@ void test_target(){
     Vec2<double> d_pos(parameters.L*cos(theta_vec[0]),parameters.L*sin(theta_vec[0])); 
     Detector detector(parameters,d_pos,0);
     Target target(parameters, &detector);
-    target.generate_pos();
-    target.generate_radiators();
     for (int i=0; i<parameters.n_theta; i++){
         std::cout<<"\r[test_target] Main loop i: "<<i<<"         ";
         Vec2<double> d_pos(parameters.L*cos(theta_vec[i]),parameters.L*sin(theta_vec[i])); 
         detector.update_pos(d_pos,i);
         target.update_detector(&detector);     
-        target.propagate();
+            for(int i=0; i<parameters.n_batch;i++){
+                target.generate_pos();
+                target.generate_radiators();
+                target.propagate();
+            }
         detector.write_to_file();
     }
 }

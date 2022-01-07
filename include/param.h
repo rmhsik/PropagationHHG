@@ -19,6 +19,7 @@ class Parameters{
         int n_slabs             = 250; 
         int n_theta             = 400;
         int n_elem              = calc_n_elem(pathQ);
+        int n_batch             = 4;
         double L                = 1e5; 
         double wl               = 0.8;
         double xmax             = 0.1;
