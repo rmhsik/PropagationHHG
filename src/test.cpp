@@ -159,16 +159,13 @@ void test_target(){
     Vec2<double> d_pos(parameters.L*cos(theta_vec[0]),parameters.L*sin(theta_vec[0])); 
     Detector detector(parameters,d_pos,0);
     Target target(parameters, &detector);
+    target.generate_pos();
     for (int i=0; i<parameters.n_theta; i++){
         std::cout<<"\r[test_target] Main loop i: "<<i<<"         ";
         Vec2<double> d_pos(parameters.L*cos(theta_vec[i]),parameters.L*sin(theta_vec[i])); 
         detector.update_pos(d_pos,i);
         target.update_detector(&detector);     
-        for(int k=0;k<parameters.n_batch;k++){
-            target.generate_pos();
-            target.generate_radiators();
-            target.propagate();
-        }
+        target.propagate();
         detector.write_to_file();
     }
 }

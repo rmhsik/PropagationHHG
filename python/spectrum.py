@@ -46,7 +46,7 @@ ax.legend(loc=0)
 plt.show()
 '''
 
-accF = LoadPropData("../results/prop_acc15.dat")
+accF = LoadPropData("../results/prop_acc26.dat")
 vmax = 1E10
 vmin = 3E0
 temp = np.abs(accF)**2

@@ -24,8 +24,8 @@ Target::Target(Parameters &param, Detector *detector){
     q_vec_= load_q();
     acc_vec_ = load_acc();
      
-    radiators_vec_.resize(n_radiators_/n_batch_);
-    pos_vec_.resize(n_radiators_/n_batch_);
+    radiators_vec_.resize(n_radiators_);
+    pos_vec_.resize(n_radiators_);
 }
 
 std::vector<double> Target::load_q(){
@@ -73,10 +73,10 @@ void Target::generate_pos(){
     int k = 0;
     if(n_slabs_>1){
         for(int i=-n_slabs_/2; i<n_slabs_/2;i++){
-            for(int j=0; j<(int)(n_radiators_/n_slabs_/n_batch_);j++){
+            for(int j=0; j<(int)(n_radiators_/n_slabs_);j++){
                 double x,y;
                 x = dis(gen)*xmax_; 
-                y = i*wl_/2.0;//-slab_width_/2.0 + dis(gen)*slab_width_;
+                y = i*wl_/2.0-slab_width_/2.0 + dis(gen)*slab_width_;
                 debug4("[Target->generate_pos]"<<x<<" "<<y<<"\n");
                 pos_vec_[k] = Vec2<double>(x,y);
                 k++;
@@ -84,7 +84,7 @@ void Target::generate_pos(){
         }
     }
     else if(n_slabs_==1){
-        for(int j=0; j<(int)(n_radiators_/n_slabs_/n_batch_);j++){
+        for(int j=0; j<(int)(n_radiators_/n_slabs_);j++){
             double x,y;
             x = dis(gen)*xmax_; 
             y = -slab_width_/2.0 + dis(gen)*slab_width_;
@@ -95,7 +95,7 @@ void Target::generate_pos(){
     }
     std::cout<<"k: "<<k<<std::endl;
     std::cout<<"Radiator pos size: "<<pos_vec_.size()<<std::endl;
-    if(k != n_radiators_/n_batch_){debug1("[Target->generate_pos] k != n_radiators. k: "<<k);}
+    if(k != n_radiators_){debug1("[Target->generate_pos] k != n_radiators. k: "<<k);}
     write_vector<Vec2<double>> (pos_vec_, pos_path); 
 }
 
@@ -103,7 +103,7 @@ void Target::generate_radiators(){
     std::vector<std::complex<double>> accF = acc_vec_;
     std::vector<double> q_vec = q_vec_;
 
-    for(int i=0; i<n_radiators_/n_batch_;i++){
+    for(int i=0; i<n_radiators_;i++){
         double phi;
         phi = 2.0*M_PI/wl_ * (pos_vec_[i].x()*cos(inc_theta_) + pos_vec_[i].y()*sin(inc_theta_) );
         phi = fabs(fmod(phi,M_PI));
@@ -118,8 +118,12 @@ void Target::update_detector(Detector *detector){
 
 void Target::propagate(){
     #pragma omp parallel for schedule(dynamic)
-    for(int i=0; i<n_radiators_/n_batch_;i++){
-        radiators_vec_[i].propagation(detector_);
+    for(int i=0; i<n_radiators_;i++){
+        double phi;
+        phi = 2.0*M_PI/wl_ * (pos_vec_[i].x()*cos(inc_theta_) + pos_vec_[i].y()*sin(inc_theta_) );
+        phi = fabs(fmod(phi,M_PI));
+        Radiator rad(pos_vec_[i],wl_, inc_theta_,interp_.interp(phi),q_vec_, detector_, i); 
+        rad.propagation(detector_);
     }
     //detector_->write_to_file();
 }
