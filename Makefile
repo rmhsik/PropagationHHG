@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS_local = -DTEXTOUTPUT -lm -O3 -fopenmp -ffast-math -g
+CFLAGS_local = -DTEXTOUTPUT -lm -O3 -fopenmp -ffast-math 
 
 PROP = src/prop.cpp
 SRC = src/vec2.cpp src/test.cpp src/radiator.cpp src/detector.cpp src/utils.cpp src/target.cpp src/param.cpp src/interpolation.cpp

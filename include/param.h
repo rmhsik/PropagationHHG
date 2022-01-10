@@ -15,7 +15,7 @@ class Parameters{
         std::string pathNode    = "data/nodelist.dat";
         std::string pathInterp  = "data/interp.dat";
         std::string outprop     = "results/prop_acc";
-        int n_radiators         = 100000;
+        int n_radiators         = 100000*8;
         int n_slabs             = 250; 
         int n_theta             = 400;
         int n_elem              = calc_n_elem(pathQ);

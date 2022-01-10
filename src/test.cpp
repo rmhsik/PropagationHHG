@@ -164,11 +164,11 @@ void test_target(){
         Vec2<double> d_pos(parameters.L*cos(theta_vec[i]),parameters.L*sin(theta_vec[i])); 
         detector.update_pos(d_pos,i);
         target.update_detector(&detector);     
-            for(int i=0; i<parameters.n_batch;i++){
-                target.generate_pos();
-                target.generate_radiators();
-                target.propagate();
-            }
+        for(int k=0;k<parameters.n_batch;k++){
+            target.generate_pos();
+            target.generate_radiators();
+            target.propagate();
+        }
         detector.write_to_file();
     }
 }
