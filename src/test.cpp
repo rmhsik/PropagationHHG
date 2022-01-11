@@ -154,7 +154,7 @@ void test_target(){
     parameters.print();
     double dtheta; 
     std::vector<double> theta_vec;
-    std::tie (theta_vec,dtheta) = linspace<double>(0,2.0*M_PI,parameters.n_theta);
+    std::tie (theta_vec,dtheta) = linspace<double>(-0.1*M_PI,0.1*M_PI,parameters.n_theta);
 
     Vec2<double> d_pos(parameters.L*cos(theta_vec[0]),parameters.L*sin(theta_vec[0])); 
     Detector detector(parameters,d_pos,0);

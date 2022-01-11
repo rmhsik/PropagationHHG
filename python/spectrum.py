@@ -46,13 +46,13 @@ ax.legend(loc=0)
 plt.show()
 '''
 
-accF = LoadPropData("../results/prop_acc26.dat")
+accF = LoadPropData("../results/prop_acc3.dat")
 vmax = 1E10
 vmin = 3E0
 temp = np.abs(accF)**2
 fig = plt.figure(figsize=(10,4))
 ax = fig.subplots(1,1)
-im = ax.imshow(np.fft.fftshift(temp,axes=0),norm=matplotlib.colors.LogNorm(vmin=vmin,vmax=vmax),interpolation='gaussian',origin='lower',extent=[0,100,-1,1],aspect=50,cmap='turbo')
+im = ax.imshow(temp,norm=matplotlib.colors.LogNorm(vmin=vmin,vmax=vmax),interpolation='gaussian',origin='lower',extent=[0,100,-1,1],aspect=50,cmap='turbo')
 #ax.pcolormesh(Q,Angle/np.pi,np.fft.fftshift(temp,axes=0),norm=matplotlib.colors.LogNorm(vmin=vmin,vmax=vmax),cmap='turbo')
 #ax.set_xlim(5,80)
 #ax.set_ylim(-0.1,0.1)

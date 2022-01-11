@@ -22,10 +22,10 @@ class Parameters{
         int n_batch             = 1;
         double L                = 1e5; 
         double wl               = 0.8;
-        double xmax             = 0.1;
+        double xmax             = 20*5;
         double ymax             = 100;
         double slab_width       = 1e-3;
-        double inc_theta        = 0.1*M_PI;
+        double inc_theta        = 0.0*M_PI;
 
         Parameters();
         
